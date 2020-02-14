@@ -25,13 +25,13 @@ try:
             
             startIndex = 0
             endIndex = len(data)
-# find index of $GPGGA within GPSIn (-1 means it's not # in GPSIn)
+            # find index of $GPGGA within GPSIn (-1 means it's not # in GPSIn)
             dataIndex = data.find("$GPGGA", startIndex, endIndex)
             if dataIndex == -1:
                 continue
             else:        
                 # find index end of line
-dataLineEnd = data.find('\r', dataIndex, endIndex)
+                dataLineEnd = data.find('\r', dataIndex, endIndex)
                 GPSLine = data[dataIndex:dataLineEnd]
             
                 numCommas = 0
