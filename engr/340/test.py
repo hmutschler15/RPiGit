@@ -32,7 +32,6 @@ try:
                 # find index end of line
                 dataLineEnd = data.find('\r', dataIndex, endIndex)
                 GPSLine = data[dataIndex:dataLineEnd]
-            
                 numCommas = 0
                 i = 7
                 while i < len(GPSLine):
@@ -55,7 +54,7 @@ try:
                     
         time.sleep(1)
 
-except:
-    print("error")
+except Exception as e:
+    print(e)
     pi.bb_serial_read_close(RxGpioPin)
     pi.stop()
