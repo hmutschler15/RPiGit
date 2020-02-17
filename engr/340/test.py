@@ -4,7 +4,6 @@ import sys
 import time
 import difflib
 import pigpio
-import gps
 import xbee
 
 RxGpioPin = 18
