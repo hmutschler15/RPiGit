@@ -12,24 +12,17 @@ GPIO.setup(16, GPIO.OUT)
 # initialize LED to off
 GPIO.output(16, 0)
 LEDstate = 0
-SWstate = 1
 
 # function to control the status of the LED
-def LED_control():
+def LED_control(channel):
     global LEDstate
     # change the state of the LED
     LEDstate = not LEDstate
     GPIO.output(16, LEDstate)
 
+# detect a falling edge on pin 12
+GPIO.add_event_detect(12, GPIO.FALLING, callback=LED_control, bouncetime=200)
+
 # main program loop
 while(True):
-    # switch not pressed and was pressed before
-    if GPIO.input(12)==False and SWstate==1:
-        # toggle LED
-        LED_control()
-        # change state of switch
-        SWstate = 0
-    # switch pressed and was not pressed before
-    if GPIO.input(12)==True and SWstate==0:
-        # change state of switch
-        SWstate = 1
+    continue
