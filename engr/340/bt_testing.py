@@ -32,12 +32,12 @@ def receive(timeout):
     rxData = ''
     # receive from socket
     try:
-        rxData = (self.socket.recv(2048))
-    except Exception:
-        print('Receive request from bluetooth device timed out.')
+        rxData = (socket.recv(2048))
+    except Exception as e:
+        print(e)
         return -1
     # decode utf data
-    decodedbdData = decode_data(bdData)
+    decodedbdData = decode_data(rxData)
     return decodedbdData
 
 # try to connect to device
@@ -45,25 +45,39 @@ try:
     socket.connect((bdAddr, channel))
 except Exception:
     print("Connection to bluetooth device failed.")
-    quit()
-# receive connected response
-bdData = ''
-while '\r\n' not in bdData:
-    receivedData = receive(5)
-    if receivedData == -1:
-        break
+    quit()       
+
+# # receive connected response
+# bdData = ''
+# while '\r\n' not in bdData:
+#     receivedData = receive(10)
+#     if receivedData == -1:
+#         break
+#     else:
+#         bdData += receivedData
+#         print(bdData)
+# socket.send('$1#')
+# # receive command response
+# bdData = ''
+# while '#' not in bdData:
+#     receivedData = receive(5)
+#     if receivedData == -1:
+#         break
+#     else:
+#         bdData += receivedData
+#         print(bdData)
+# sleep(5)
+# socket.send('$0#')
+
+while True:
+    command = input("Enter '1' to go.\r\nEnter '0' to stop.\r\n")
+    if command == '1':
+        try:
+            socket.send('$1#')
+        except Exception as e:
+            print("Go command failed to send.")
     else:
-        bdData += receivedData
-        print(bdData)
-socket.send('$1#')
-# receive command response
-bdData = ''
-while '#' not in bdData:
-    receivedData = receive(5)
-    if receivedData == -1:
-        break
-    else:
-        bdData += receivedData
-        print(bdData)
-sleep(5)
-socket.send('$0#')
+        try:
+            socket.send('$0#')
+        except Exception as e:
+            print("Stop command failed to send.")
