@@ -1,32 +1,62 @@
-# Bluetooth Testing
+#   Hamilton Mutschler
+#   Team 13: T2V
+#   ENGR 340 Senior Design
+#   Traffic Light Application:
+#   Bluetooth Communication Testing
 
 # simple inquiry example
 import bluetooth
 import re
 
+# LF Robot BT module address
 bdAddr = "FC:58:FA:22:B4:C6"
-
-# nearby_devices = bluetooth.discover_devices(lookup_names=True)
-# print("Found {} devices.".format(len(nearby_devices)))
-
-# for addr, name in nearby_devices:
-#     print("  {} - {}".format(addr, name))
-
 # create a socket for connection to device
 socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-# socket.settimeout(10)
 # CHANNEL IS 1 TO MATCH BT DEVICE SERVER
 channel = 1
+
+# decode utf data
+def decode_data(data):
+    # decode utf
+    decodedData = data.decode('utf-8', 'ignore')
+    # decode any regular expression data
+    ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
+    finalData = ansi_escape.sub('', decodedData)
+    return finalData
+
+# receive bt data
+def receive(timeout):
+    # set timeout to trigger if receive from device takes an abnormally long time
+    socket.settimeout(timeout)
+    rxData = ''
+    # receive from socket
+    try:
+        rxData = (self.socket.recv(2048))
+    except Exception:
+        print('Receive request from bluetooth device timed out.')
+        return -1
+    # decode utf data
+    decodedbdData = decode_data(bdData)
+    return decodedbdData
+
 # try to connect to device
 socket.connect((bdAddr, channel))
-print("Connection succeeded.")
-socket.send('AT+ADDR?\r\n')
-socket.settimeout(5)
+# receive connected response
 bdData = ''
-bdData = (socket.recv(2048))
-# decode utf
-decodedData = bdData.decode('utf-8', 'ignore')
-# decode any regular expression data
-ansi_escape = re.compile(r'\x1B\[[0-?]*[ -/]*[@-~]')
-finalData = ansi_escape.sub('', decodedData)
-print(finalData)
+while '\r\n' not in bdData:
+    receivedData = receive(5)
+    if receivedData == -1:
+        break
+    else:
+        bdData += receivedData
+        print(bdData)
+socket.send('$0#')
+# receive command response
+bdData = ''
+while '#' not in bdData:
+    receivedData = receive(5)
+    if receivedData == -1:
+        break
+    else:
+        bdData += receivedData
+        print(bdData)
