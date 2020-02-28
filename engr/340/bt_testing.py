@@ -7,6 +7,7 @@
 # simple inquiry example
 import bluetooth
 import re
+from time import sleep
 
 # LF Robot BT module address
 bdAddr = "FC:58:FA:22:B4:C6"
@@ -40,7 +41,11 @@ def receive(timeout):
     return decodedbdData
 
 # try to connect to device
-socket.connect((bdAddr, channel))
+try:
+    socket.connect((bdAddr, channel))
+except Exception:
+    print("Connection to bluetooth device failed.")
+    quit()
 # receive connected response
 bdData = ''
 while '\r\n' not in bdData:
@@ -50,7 +55,7 @@ while '\r\n' not in bdData:
     else:
         bdData += receivedData
         print(bdData)
-socket.send('$0#')
+socket.send('$1#')
 # receive command response
 bdData = ''
 while '#' not in bdData:
@@ -60,3 +65,5 @@ while '#' not in bdData:
     else:
         bdData += receivedData
         print(bdData)
+sleep(5)
+socket.send('$0#')
