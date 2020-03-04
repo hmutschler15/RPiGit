@@ -17,7 +17,7 @@ socket1 = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 socket2 = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
 
 
-# decode utf data
+# decode raw utf data received from bt device
 def decode_data(data):
     # decode utf
     decodedData = data.decode('utf-8', 'ignore')
@@ -26,7 +26,7 @@ def decode_data(data):
     finalData = ansi_escape.sub('', decodedData)
     return finalData
 
-# receive bt data
+# receive raw bt data
 def receive(timeout):
     # set timeout to trigger if receive from device takes an abnormally long time
     socket.settimeout(timeout)
