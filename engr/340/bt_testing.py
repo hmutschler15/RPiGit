@@ -10,11 +10,12 @@ import re
 from time import sleep
 
 # LF Robot BT module address
-bdAddr = "FC:58:FA:22:B4:C6"
+bdAddr1 = "FC:58:FA:22:CA:65"
+bdAddr2 = "FC:58:FA:22:BC:A6"
 # create a socket for connection to device
-socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
-# CHANNEL IS 1 TO MATCH BT DEVICE SERVER
-channel = 1
+socket1 = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+socket2 = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+
 
 # decode utf data
 def decode_data(data):
@@ -42,9 +43,10 @@ def receive(timeout):
 
 # try to connect to device
 try:
-    socket.connect((bdAddr, channel))
-except Exception:
-    print("Connection to bluetooth device failed.")
+    socket1.connect((bdAddr1, 1))
+    socket2.connect((bdAddr2, 1))
+except Exception as e:
+    print(e)
     quit()       
 
 # # receive connected response
@@ -73,11 +75,13 @@ while True:
     command = input("Enter '1' to go.\r\nEnter '0' to stop.\r\n")
     if command == '1':
         try:
-            socket.send('$1#')
+            socket1.send('$1#')
+            socket2.send('$1#')
         except Exception as e:
             print("Go command failed to send.")
     else:
         try:
-            socket.send('$0#')
+            socket1.send('$0#')
+            socket2.send('$0#')
         except Exception as e:
             print("Stop command failed to send.")
