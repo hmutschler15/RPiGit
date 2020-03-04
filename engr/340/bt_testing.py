@@ -41,6 +41,7 @@ def receive(timeout):
     decodedbdData = decode_data(rxData)
     return decodedbdData
 
+# send data to connected bluetooth devices
 def send(device, command):
     if device == 1:
         if command == 1:
@@ -69,17 +70,20 @@ def send(device, command):
                 print("Device 2")
                 print(e)
 
-# try to connect to device
+# connect to device
 try:
     socket1.connect((bdAddr1, 1))
+    print("Device 1 connected successfully.")
     socket2.connect((bdAddr2, 1))
+    print("Device 2 connected successfully.")
 except Exception as e:
     print(e)
     quit()       
-# main loop: control of cars via commandline
+print("Starting control of devices via terminal")
+# main loop: control of devices via commandline
 while True:
-    print("LF Robot Control")
-    command = input("Car control: (device number)(stop'0'/go'1')\r\n")
+    print("Shared commands: '00' to start and 'Enter' to stop")
+    command = input("Command format: (device number)(stop'0'/go'1')\r\n")
     if command == "10":
         try:
             socket1.send('$0#')
