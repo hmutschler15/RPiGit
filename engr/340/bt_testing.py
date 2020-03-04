@@ -41,6 +41,34 @@ def receive(timeout):
     decodedbdData = decode_data(rxData)
     return decodedbdData
 
+def send(device, command):
+    if device == 1:
+        if command == 1:
+            try:
+                socket1.send('$1#')
+            except Exception as e:
+                print("Device 1")
+                print(e)
+        else:
+            try:
+                socket1.send('$0#')
+            except Exception as e:
+                print("Device 1")
+                print(e)
+    elif device == 2:
+        if command == 1:
+            try:
+                socket2.send('$1#')
+            except Exception as e:
+                print("Device 2")
+                print(e)
+        else:
+            try:
+                socket2.send('$0#')
+            except Exception as e:
+                print("Device 2")
+                print(e)
+
 # try to connect to device
 try:
     socket1.connect((bdAddr1, 1))
@@ -48,40 +76,39 @@ try:
 except Exception as e:
     print(e)
     quit()       
-
-# # receive connected response
-# bdData = ''
-# while '\r\n' not in bdData:
-#     receivedData = receive(10)
-#     if receivedData == -1:
-#         break
-#     else:
-#         bdData += receivedData
-#         print(bdData)
-# socket.send('$1#')
-# # receive command response
-# bdData = ''
-# while '#' not in bdData:
-#     receivedData = receive(5)
-#     if receivedData == -1:
-#         break
-#     else:
-#         bdData += receivedData
-#         print(bdData)
-# sleep(5)
-# socket.send('$0#')
-
+# main loop: control of cars via commandline
 while True:
-    command = input("Enter '1' to go.\r\nEnter '0' to stop.\r\n")
-    if command == '1':
+    print("LF Robot Control")
+    command = input("Car control: (device number)(stop'0'/go'1')\r\n")
+    if command == "10":
+        try:
+            socket1.send('$0#')
+        except Exception as e:
+            print("Device 1: stop command failed to send")
+    elif command == "11":
+        try:
+            socket1.send('$1#')
+        except Exception as e:
+            print("Device 1: go command failed to send")
+    elif command == "20":
+        try:
+            socket2.send('$0#')
+        except Exception as e:
+            print("Device 2: stop command failed to send")
+    elif command == "21":
+        try:
+            socket2.send('$1#')
+        except Exception as e:
+            print("Device 2: go command failed to send")
+    elif command == "00":
         try:
             socket1.send('$1#')
             socket2.send('$1#')
         except Exception as e:
-            print("Go command failed to send.")
+            print("Go all command failed to send.")
     else:
         try:
             socket1.send('$0#')
             socket2.send('$0#')
         except Exception as e:
-            print("Stop command failed to send.")
+            print("Stop all command failed to send.")
