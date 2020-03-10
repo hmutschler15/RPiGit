@@ -70,49 +70,54 @@ def send(device, command):
                 print("Device 2")
                 print(e)
 
-# connect to device
 try:
-    socket1.connect((bdAddr1, 1))
-    print("Device 1 connected successfully.")
-    socket2.connect((bdAddr2, 1))
-    print("Device 2 connected successfully.")
-except Exception as e:
-    print(e)
-    quit()       
-print("Starting control of devices via terminal")
-# main loop: control of devices via commandline
-while True:
-    print("Shared commands: '00' to start and 'Enter' to stop")
-    command = input("Command format: (device number)(stop'0'/go'1')\r\n")
-    if command == "10":
-        try:
-            socket1.send('$0#')
-        except Exception as e:
-            print("Device 1: stop command failed to send")
-    elif command == "11":
-        try:
-            socket1.send('$1#')
-        except Exception as e:
-            print("Device 1: go command failed to send")
-    elif command == "20":
-        try:
-            socket2.send('$0#')
-        except Exception as e:
-            print("Device 2: stop command failed to send")
-    elif command == "21":
-        try:
-            socket2.send('$1#')
-        except Exception as e:
-            print("Device 2: go command failed to send")
-    elif command == "00":
-        try:
-            socket1.send('$1#')
-            socket2.send('$1#')
-        except Exception as e:
-            print("Go all command failed to send.")
-    else:
-        try:
-            socket1.send('$0#')
-            socket2.send('$0#')
-        except Exception as e:
-            print("Stop all command failed to send.")
+    # connect to device
+    try:
+        socket1.connect((bdAddr1, 1))
+        print("Device 1 connected successfully.")
+        socket2.connect((bdAddr2, 1))
+        print("Device 2 connected successfully.")
+    except Exception as e:
+        print(e)
+        quit()       
+    print("Starting control of devices via terminal")
+    # main loop: control of devices via commandline
+    while True:
+        print("Shared commands: '00' to start and 'Enter' to stop")
+        command = input("Command format: (device number)(stop'0'/go'1')\r\n")
+        if command == "10":
+            try:
+                socket1.send('$0#')
+            except Exception as e:
+                print("Device 1: stop command failed to send")
+        elif command == "11":
+            try:
+                socket1.send('$1#')
+            except Exception as e:
+                print("Device 1: go command failed to send")
+        elif command == "20":
+            try:
+                socket2.send('$0#')
+            except Exception as e:
+                print("Device 2: stop command failed to send")
+        elif command == "21":
+            try:
+                socket2.send('$1#')
+            except Exception as e:
+                print("Device 2: go command failed to send")
+        elif command == "00":
+            try:
+                socket1.send('$1#')
+                socket2.send('$1#')
+            except Exception as e:
+                print("Go all command failed to send.")
+        else:
+            try:
+                socket1.send('$0#')
+                socket2.send('$0#')
+            except Exception as e:
+                print("Stop all command failed to send.")
+except KeyboardInterrupt:
+    socket1.close()
+    socket2.close()
+    print("Program terminated via commandline.")
