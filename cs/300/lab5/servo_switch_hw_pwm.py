@@ -34,7 +34,7 @@ pi.callback(SWITCH, pigpio.FALLING_EDGE, switch_press)
 if not pi.connected:
     exit(0)
 else:
-    print("pigio daemon connected")
+    print("pigpio daemon connected")
 
 # set the servo motor
 pi.set_servo_pulsewidth(MOTOR, 0)
