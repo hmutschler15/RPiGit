@@ -31,7 +31,8 @@ def button_callback(channel):
         (result, num) = client.publish(TOPIC, MESSAGE, qos=QOS)
         if result != 0:
             print('PUBLISH returned error:', result)
-        print("published intersection change msg")
+        else:
+            print("published intersection change msg")
     else:
         print("WARNING: unknown GPIO input detected")
 
