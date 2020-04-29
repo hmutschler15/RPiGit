@@ -9,11 +9,13 @@ import paho.mqtt.client as mqtt
 import time
 
 # Constants
-BROKER = 'mqtt.eclipse.org'
-PORT = 1883
+BROKER = 'iot.cs.calvin.edu'
+USERNAME = "cs300" # Put broker username here
+PASSWORD = "safeIoT" # Put broker password here
+PORT = 8883
 QOS = 0
 TOPIC = 'hlm25/finalproject'
-DELAY = 10
+CERTS = '/etc/ssl/certs/ca-certificates.crt'
 BUTTON = 16
 MESSAGE = '1'
 
@@ -43,17 +45,20 @@ def on_connect(client, userdata, flags, rc):
 
 # Detect a falling edge on input pin
 GPIO.add_event_detect(BUTTON, GPIO.FALLING, callback=button_callback, bouncetime=500)
+
 # setup MQTT client and callback
 client = mqtt.Client()
 client.on_connect = on_connect
 # sonnect to MQTT broker
+client.username_pw_set(USERNAME, password=PASSWORD)
+client.tls_set(CERTS)
 client.connect(BROKER, PORT, 60)
 client.loop_start()
 
 # continuously wait for GPIO input
 try:
     while True:
-        time.sleep(DELAY)
+        continue
 except KeyboardInterrupt:
     print("program terminated")
     client.disconnect()
